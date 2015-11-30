@@ -3,16 +3,16 @@ package data_structures.LinkedLists;
 public class LinkedListsMain {
 
 	public static void main(String[] args) {
-		LinkedList ll = new LinkedList(7);
+		SinglyLinkedList ll = new SinglyLinkedList(7);
 		ll.append(5);
 		ll.append(3);
 		ll.append(29);
 		ll.delete(2);
+		System.out.println(ll.contains(5));
 		ll.delete(3);
 		ll.delete(5);
 		ll.delete(7);
 		ll.print();
-		System.out.println("pre39");
 		ll.delete(29);
 		ll.print();
 		System.out.println("post39");

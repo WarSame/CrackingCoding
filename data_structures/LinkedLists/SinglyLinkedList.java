@@ -1,13 +1,13 @@
 package data_structures.LinkedLists;
 
-import data_structures.LinkedLists.Node;
+import data_structures.LinkedLists.SinglyLinkedNode;
 
-public class LinkedList{
-	private Node head = null;
-	private Node tail = null;
+public class SinglyLinkedList{
+	private SinglyLinkedNode head = null;
+	private SinglyLinkedNode tail = null;
 	private int length = 0;
-	public LinkedList(int data){
-		this.head = new Node(data);
+	public SinglyLinkedList(int data){
+		this.head = new SinglyLinkedNode(data);
 		this.tail = this.head;
 		this.length = 1;
 	}
@@ -24,8 +24,8 @@ public class LinkedList{
 		return this.head.getData();
 	}
 	public void append(int data){//Add data node to the end of the list
-		Node end = new Node(data);
-		Node n = this.tail;
+		SinglyLinkedNode end = new SinglyLinkedNode(data);
+		SinglyLinkedNode n = this.tail;
 		if (n==null){
 			this.tail = end;
 			this.head = end;
@@ -37,7 +37,7 @@ public class LinkedList{
 		this.length++;
 	}
 	public void print(){
-		Node n = this.head;
+		SinglyLinkedNode n = this.head;
 		if (n==null){
 			System.out.println("Linked list is empty");
 			return;
@@ -52,7 +52,7 @@ public class LinkedList{
 	}
 	public int[] toArray(){
 		int[] arr = new int[this.length];
-		Node n =this.head;
+		SinglyLinkedNode n =this.head;
 		if (n==null){
 			return null;
 		}
@@ -69,7 +69,7 @@ public class LinkedList{
  		return this.length;
  	}
 	public void delete(int data){
-		Node n = this.head;
+		SinglyLinkedNode n = this.head;
 		if (n==null){
 			return;
 		}
@@ -92,7 +92,7 @@ public class LinkedList{
 			if (n.getData()!=data){//If data wasn't in array then we're done
 				return;
 			}
-			//If we're deleting the last element
+			//If we're deleting the only remaining element
 			if (this.length <=1){
 				this.tail = null;
 				this.head = null;
@@ -116,8 +116,8 @@ public class LinkedList{
 			}
 		}
 	}
-	public boolean contains(int data){
-		Node n = this.head;
+	public boolean contains(int data){//data is in linked list
+		SinglyLinkedNode n = this.head;
 		if (n==null){
 			return false;
 		}
