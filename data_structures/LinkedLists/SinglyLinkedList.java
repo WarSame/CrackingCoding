@@ -1,46 +1,63 @@
 package data_structures.LinkedLists;
 
+import java.util.NoSuchElementException;
+
 import data_structures.LinkedLists.SinglyLinkedNode;
 
 public class SinglyLinkedList{
 	private SinglyLinkedNode head = null;
-	private SinglyLinkedNode tail = null;
 	private int length = 0;
 	public SinglyLinkedList(int data){
 		this.head = new SinglyLinkedNode(data);
-		this.tail = this.head;
 		this.length = 1;
 	}
-	public int getTail(){
-		if (this.head ==null){
-			return 0;
-		}
-		return this.tail.getData();
-	}
 	public int getHead(){
-		if (this.head ==null){
-			return 0;
+		if (this.head == null){
+			throw new NoSuchElementException();
 		}
 		return this.head.getData();
 	}
-	public void append(int data){//Add data node to the end of the list
+	public int getTail(){
+		SinglyLinkedNode tailNode = this.head;
+		if (tailNode==null){
+			throw new NoSuchElementException();
+		}
+		while(tailNode.getNext()!=null){
+			tailNode = tailNode.getNext();
+		}
+		return tailNode.getData();
+	}
+	public void clear(){
+		this.head = null;
+		this.length = 0;
+	}
+	public boolean appendFront(int data){//Add data node to the front of the list
+		SinglyLinkedNode frontData = new SinglyLinkedNode(data);
+		frontData.setNext(this.head);
+		this.head = frontData;
+		this.length++;
+		return true;
+	}
+	public boolean append(int data){//Add data node to the end of the list
 		SinglyLinkedNode end = new SinglyLinkedNode(data);
-		SinglyLinkedNode n = this.tail;
-		if (n==null){
-			this.tail = end;
+		SinglyLinkedNode n = this.head;
+		if (n==null){//If list is empty
 			this.head = end;
 			this.length = 1;
-			return;
+			return true;
+		}
+		while (n.getNext()!=null){//Get last node
+			n=n.getNext();
 		}
 		n.setNext(end);
-		this.tail = end;
 		this.length++;
+		return true;
 	}
 	public void print(){
 		SinglyLinkedNode n = this.head;
 		if (n==null){
 			System.out.println("Linked list is empty");
-			return;
+			throw new NoSuchElementException();
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append(n.getData());
@@ -54,7 +71,7 @@ public class SinglyLinkedList{
 		int[] arr = new int[this.length];
 		SinglyLinkedNode n =this.head;
 		if (n==null){
-			return null;
+			throw new NoSuchElementException();
 		}
 		arr[0] = n.getData();
 		int index = 1;
@@ -68,58 +85,35 @@ public class SinglyLinkedList{
  	public int getLength(){
  		return this.length;
  	}
-	public void delete(int data){
-		SinglyLinkedNode n = this.head;
-		if (n==null){
-			return;
+	public boolean delete(int data){
+		SinglyLinkedNode nodeBeforeDelete = this.head;
+		if (nodeBeforeDelete==null){
+			throw new NoSuchElementException();
+		} else if (nodeBeforeDelete.getData()==data){//If the head is the data we want
+			this.head = this.head.getNext();
+			this.length--;
+			return true;
 		}
-		if (n.getData()==data){//If the head is the data we want
-			if (n.getNext()==null){//If it's the only node, null the head and tail
-				this.tail = null;
-				this.head = null;
-				this.length = 0;
+		SinglyLinkedNode next;
+		while (true){//Loop through list until end or data
+			next = nodeBeforeDelete.getNext();
+			if (next==null){
+				return false;
 			}
-			else {//Or move the head to the next node
-				this.head = n.getNext();
-				this.length--;
+			else if (next.getData()==data){
+				break;
 			}
-			return;
+			nodeBeforeDelete=next;
 		}
-		while (n.getNext()!=null && n.getNext().getData()!=data){//Get the data node or the last node at n.next
-			n=n.getNext();
-		}
-		if (n.getNext() == null){//If n is the last element in the list
-			if (n.getData()!=data){//If data wasn't in array then we're done
-				return;
-			}
-			//If we're deleting the only remaining element
-			if (this.length <=1){
-				this.tail = null;
-				this.head = null;
-				this.length=0;
-			}
-			else {//If we're just moving the tail
-				n.setNext(null);
-				this.tail = n;
-				this.length--;
-			}
-		}
-		else {//If n is not the last element
-			if (n.getNext().getNext()==null){//If n.next is the last element
-				n.setNext(null);
-				this.tail = n;
-				this.length--;
-			}
-			else {//If n.next is not the last element
-				n.setNext(n.getNext().getNext());
-				this.length--;
-			}
-		}
+		nodeBeforeDelete.setNext(next.getNext());//Skip the deleted node
+		next.setNext(null);//For garbage collection
+		this.length--;
+		return true;
 	}
 	public boolean contains(int data){//data is in linked list
 		SinglyLinkedNode n = this.head;
 		if (n==null){
-			return false;
+			throw new NoSuchElementException();
 		}
 		while (n.getData()!=data &&n.getNext()!=null){//Get either the desired node or the last node
 			n = n.getNext();
@@ -128,5 +122,19 @@ public class SinglyLinkedList{
 			return true;
 		}
 		return false;
+	}
+	public int getCount(int data){
+		SinglyLinkedNode currNode = this.head;
+		if (currNode==null){
+			throw new NoSuchElementException();
+		}
+		int count = 0;
+		while (currNode!=null){
+			if (currNode.getData()==data){
+				count++;
+			}
+			currNode = currNode.getNext();
+		}
+		return count;
 	}
 }
