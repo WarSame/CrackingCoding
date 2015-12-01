@@ -11,13 +11,18 @@ public class SinglyLinkedList{
 		this.head = new SinglyLinkedNode(data);
 		this.length = 1;
 	}
-	public int getHead(){
+	public SinglyLinkedList(){
+	}
+ 	public int getLength(){
+ 		return this.length;
+ 	}
+	public SinglyLinkedNode getHead(){
 		if (this.head == null){
 			throw new NoSuchElementException();
 		}
-		return this.head.getData();
+		return this.head;
 	}
-	public int getTail(){
+	public SinglyLinkedNode getTail(){
 		SinglyLinkedNode tailNode = this.head;
 		if (tailNode==null){
 			throw new NoSuchElementException();
@@ -25,7 +30,7 @@ public class SinglyLinkedList{
 		while(tailNode.getNext()!=null){
 			tailNode = tailNode.getNext();
 		}
-		return tailNode.getData();
+		return tailNode;
 	}
 	public void clear(){
 		this.head = null;
@@ -82,9 +87,6 @@ public class SinglyLinkedList{
 		}
 		return arr;
 	}
- 	public int getLength(){
- 		return this.length;
- 	}
 	public boolean delete(int data){
 		SinglyLinkedNode nodeBeforeDelete = this.head;
 		if (nodeBeforeDelete==null){
@@ -136,5 +138,108 @@ public class SinglyLinkedList{
 			currNode = currNode.getNext();
 		}
 		return count;
+	}
+	public void removeDuplicates(){//Remove any data that has duplicates
+		SinglyLinkedNode prevNode = this.head;//Node before the node we are looking at
+		if (prevNode==null){
+			throw new NoSuchElementException();
+		}
+		SinglyLinkedNode currNode = prevNode.getNext();//The node we are looking at
+		while (currNode!=null){
+			SinglyLinkedNode runnerNode = this.head;//Runs from the head to our current node
+			while (runnerNode!=currNode){
+				if (currNode.getData() == runnerNode.getData()){//If we have a duplicate node
+					prevNode.setNext(currNode.getNext());
+					currNode = prevNode.getNext();
+					this.length--;
+					break;//Match one at a time
+				}
+				runnerNode = runnerNode.getNext();
+			}
+			if (runnerNode==currNode){//If there was no duplicate, move to the next node
+				prevNode = currNode;
+				currNode = currNode.getNext();
+			}
+		}
+	}
+	public int fromLast(int distance){
+		if (distance==0){
+			return this.getTail().getData();
+		}
+		if (distance==this.length-1){
+			return this.getHead().getData();
+		}
+		if (distance >= this.length){
+			throw new NoSuchElementException();
+		}
+		SinglyLinkedNode firstNode = this.head;
+		SinglyLinkedNode secondNode = firstNode;
+		while (secondNode!=null && distance>=0){//Either separate the nodes by distance or run out of room
+			secondNode = secondNode.getNext();
+			distance--;
+		}
+		while (secondNode!=null){//Move the nodes to the end of the list
+			secondNode = secondNode.getNext();
+			firstNode = firstNode.getNext();
+		}
+		return firstNode.getData();
+	}
+	public boolean deleteNode(SinglyLinkedNode targetNode){//delete target node from linked list
+		if (targetNode == null||targetNode.getNext()==null){
+			targetNode = null;
+			return false;
+		}
+		targetNode = targetNode.getNext();
+		this.length--;
+		return true;
+	}
+	public static SinglyLinkedList addLists(SinglyLinkedList l1, SinglyLinkedList l2){//Lists go from lowest power to highest
+		if (l1==null && l2==null){
+			return null;
+		}
+		SinglyLinkedNode n1 = l1.head;
+		SinglyLinkedNode n2 = l2.head;
+		SinglyLinkedList retList = new SinglyLinkedList();
+		int carry = 0;
+		while (n1!=null || n2!=null){//While one or the other ll still has numbers left
+			int result = carry;
+			if (n1!=null){
+				result+=n1.getData();
+				n1 = n1.getNext();
+			}
+			if (n2!=null){
+				result+=n2.getData();
+				n2 = n2.getNext();
+			}
+			carry = result/10;
+			result %= 10;
+			retList.append(result);
+		}
+		return retList;
+	}
+	public SinglyLinkedNode findLoopNode(){//Given a loop in a linked list, return the node at the start of the loop
+		SinglyLinkedNode currNode = this.head;
+		if (currNode ==null){
+			return null;
+		}
+		this.getTail().setNext(this.head.getNext());//Start cycle
+		SinglyLinkedNode runnerFast = currNode;
+		SinglyLinkedNode runnerSlow = currNode;
+		while (runnerFast!=null){
+			runnerFast = runnerFast.getNext().getNext();//2 at a time
+			runnerSlow = runnerSlow.getNext();//1 at a time
+			if (runnerFast==runnerSlow){//If fast catches up to slow
+				break;
+			}
+		}
+		if (runnerFast == null){//If they never met
+			return null;
+		}
+		runnerSlow = this.head;
+		while (runnerSlow!=runnerFast){
+			runnerSlow = runnerSlow.getNext();
+			runnerFast = runnerFast.getNext();
+		}
+		return runnerFast;
 	}
 }
