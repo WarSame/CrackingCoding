@@ -31,14 +31,12 @@ public class Queue<T> {
 		QueueNode<T> tailNode = this.tail;
 		this.length++;
 		if (tailNode==null){
-			QueueNode<T> node = new QueueNode<T>(data);
-			this.head = node;
-			this.tail = node;
+			this.head = new QueueNode<T>(data);
+			this.tail = this.head;
 			return;
 		}
-		QueueNode<T> newNode = new QueueNode<T>(data);
-		tailNode.setNext(newNode);
-		this.tail = newNode;
+		tailNode.setNext(new QueueNode<T>(data));
+		this.tail = tailNode.getNext();
 	}
 	public QueueNode<T> dequeue(){//Dequeue them from head
 		QueueNode<T> headNode = this.head;
