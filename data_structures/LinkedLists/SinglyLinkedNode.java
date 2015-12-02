@@ -1,18 +1,18 @@
 package data_structures.LinkedLists;
 
-public class SinglyLinkedNode {
-	private SinglyLinkedNode next = null;
-	int data;
-	public SinglyLinkedNode(int data){
+public class SinglyLinkedNode<T> {
+	private SinglyLinkedNode<T> next = null;
+	private T data;
+	public SinglyLinkedNode(T data){
 		this.data=data;
 	}
-	public int getData(){
+	public T getData(){
 		return this.data;
 	}
-	public void setNext(SinglyLinkedNode next){
+	public void setNext(SinglyLinkedNode<T> next){
 		this.next = next;
 	}
-	public SinglyLinkedNode getNext(){
+	public SinglyLinkedNode<T> getNext(){
 		return this.next;
 	}
 }
