@@ -2,10 +2,10 @@ package data_structures.StacksAndQueues;
 
 import java.util.NoSuchElementException;
 
-public class Stack<T> {//Work from the top
+public class Stack<StackNode<T>> {//Work from the top
 	private StackNode<T> top;
 	private int size;
-	public Stack(T data){
+	public Stack(StackNode<T> data){
 		StackNode<T> node = new StackNode<T>(data);
 		this.top = node;
 	}

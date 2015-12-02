@@ -1,19 +1,19 @@
 package data_structures.StacksAndQueues;
 
-public class MinStackNode<T> extends StackNode<T> {
-	//Assumes integer type
-	private int min;
+public class MinStackNode<T extends Comparable<T>> extends StackNode<T> {
+	//T must be comparable
+	private T min;
 	public MinStackNode(T data) {
 		super(data);
 		this.min = minimum(super.getNext().getData(), this.getData());
 	}
-	private int minimum(T t, T t2){
-		if (T.compare(t, t2)){
+	private T minimum(T t, T t2){
+		if (t.compareTo(t2) > 0){
 			return t;
 		}
 		return t2;
 	}
-	public int getMin(){
+	public T getMin(){
 		return this.min;
 	}
 }
