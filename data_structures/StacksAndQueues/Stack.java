@@ -2,17 +2,17 @@ package data_structures.StacksAndQueues;
 
 import java.util.NoSuchElementException;
 
-public class Stack<StackNode<T>> {//Work from the top
-	private StackNode<T> top;
+public class Stack<E> implements StackInterface<E> {
+	private StackNode<E> top;
 	private int size;
-	public Stack(StackNode<T> data){
-		StackNode<T> node = new StackNode<T>(data);
+	public Stack(E data){
+		StackNode<E> node = new StackNode<E>(data);
 		this.top = node;
 	}
 	public Stack(){
 		this.top = null;
 	}
-	public StackNode<T> peek(){
+	public StackNode<E> peek(){
 		return this.top;
 	}
 	public int getSize(){
@@ -24,20 +24,20 @@ public class Stack<StackNode<T>> {//Work from the top
 	public void decreaseSize(){
 		this.size--;
 	}
-	public StackNode<T> pop(){
-		StackNode<T> node = this.top;
+	public StackNode<E> pop(){
+		StackNode<E> node = this.top;
 		this.top = this.top.getNext();
 		decreaseSize();
 		return node;
 	}
-	public void push(T data){
-		StackNode<T> node = new StackNode<T>(data);
+	public void push(E data){
+		StackNode<E> node = new StackNode<E>(data);
 		node.setNext(this.top);
 		increaseSize();
 		this.top = node;
 	}
 	public void print(){
-		StackNode<T> node = this.top;
+		StackNode<E> node = this.top;
 		if (node==null){
 			throw new NoSuchElementException();
 		}
