@@ -27,11 +27,17 @@ public class Stack<E> implements StackInterface<E> {
 	public StackNode<E> pop(){
 		StackNode<E> node = this.top;
 		if (this.top==null){
-			return null;
+			throw new NoSuchElementException();
 		}
 		this.top = this.top.getNext();
 		decreaseSize();
 		return node;
+	}
+	public void push(StackNode<E> dataNode){
+		//More efficient but less accessible
+		dataNode.setNext(this.top);
+		increaseSize();
+		this.top = dataNode;
 	}
 	public void push(E data){
 		StackNode<E> node = new StackNode<E>(data);

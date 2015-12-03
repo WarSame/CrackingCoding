@@ -5,7 +5,11 @@ import java.util.NoSuchElementException;
 public class StacksAndQueuesMain {
 
 	public static void main(String[] args) {
-		towersOfHanoi(2);
+		SortableStack<Integer> s = new DescendingSortedStack<Integer>();
+		s.push(4);
+		s.push(6);
+		s.push(3);
+		System.out.println(s.print());
 	}
 	
 	public static void towersOfHanoi(int n){
