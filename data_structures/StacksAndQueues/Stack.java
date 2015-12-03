@@ -26,6 +26,9 @@ public class Stack<E> implements StackInterface<E> {
 	}
 	public StackNode<E> pop(){
 		StackNode<E> node = this.top;
+		if (this.top==null){
+			return null;
+		}
 		this.top = this.top.getNext();
 		decreaseSize();
 		return node;
@@ -36,7 +39,7 @@ public class Stack<E> implements StackInterface<E> {
 		increaseSize();
 		this.top = node;
 	}
-	public void print(){
+	public StringBuilder print(){
 		StackNode<E> node = this.top;
 		if (node==null){
 			throw new NoSuchElementException();
@@ -46,6 +49,6 @@ public class Stack<E> implements StackInterface<E> {
 			s.append(node.getData()+" ");
 			node=node.getNext();
 		}
-		System.out.println(s);
+		return s;
 	}
 }

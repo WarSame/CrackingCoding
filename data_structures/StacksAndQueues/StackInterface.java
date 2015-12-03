@@ -7,5 +7,5 @@ public interface StackInterface<E> {
 	public void decreaseSize();
 	public StackNode<E> pop();
 	public void push(E data);
-	public void print();
+	public StringBuilder print();
 }
