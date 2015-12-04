@@ -21,24 +21,28 @@ public class Queue<T> {
 	public int getLength(){
 		return this.length;
 	}
+	public QueueNode<T> peek(){
+		return this.head;
+	}
 	public QueueNode<T> getHead(){
 		return this.head;
 	}
 	public QueueNode<T> getTail(){
 		return this.tail;
 	}
-	public void enqueue(T data){//Enqueue them at the tail
+	public void enq(T data){//Enqueue them at the tail
 		QueueNode<T> tailNode = this.tail;
 		this.length++;
-		if (tailNode==null){
-			this.head = new QueueNode<T>(data);
-			this.tail = this.head;
+		QueueNode<T> newNode = new QueueNode<T>(data);
+		if (tailNode==null){//If q is empty
+			this.head = newNode;
+			this.tail = newNode;
 			return;
 		}
-		tailNode.setNext(new QueueNode<T>(data));
-		this.tail = tailNode.getNext();
+		tailNode.setNext(newNode);
+		this.tail = newNode;
 	}
-	public QueueNode<T> dequeue(){//Dequeue them from head
+	public QueueNode<T> deq(){//Dequeue them from head
 		QueueNode<T> headNode = this.head;
 		if (headNode==null){
 			throw new NoSuchElementException();
