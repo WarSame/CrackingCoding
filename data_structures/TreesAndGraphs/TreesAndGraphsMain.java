@@ -8,6 +8,7 @@ public class TreesAndGraphsMain {
 		t.insert(3);
 		t.insert(6);
 		t.insert(8);
+		t.insert(1);
 		t.print();
 		//System.out.println(t.getRoot().getRight().getData());
 	}
