@@ -9,7 +9,7 @@ public class TreesAndGraphsMain {
 		t.insert(6);
 		t.insert(8);
 		t.print();
-		//System.out.println(t.getRoot().getRight().getRight().getDistance());
+		//System.out.println(t.getRoot().getRight().getData());
 	}
 
 }

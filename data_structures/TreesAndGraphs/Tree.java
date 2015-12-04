@@ -16,7 +16,7 @@ public class Tree<E extends Comparable<E>> {
 	public void insert(E data){
 		TreeNode<E> currentNode = this.root;
 		if (currentNode==null){
-			this.root = new TreeNode<E>(data,0);
+			this.root = new TreeNode<E>(data);
 			return;
 		}
 		TreeNode<E> child;
@@ -35,31 +35,63 @@ public class Tree<E extends Comparable<E>> {
 			return;
 		}
 		LinkedList<TreeNode<E>> q = new LinkedList<TreeNode<E>>();
+		LinkedList<TreeNode<E>> level = new LinkedList<TreeNode<E>>();
 		q.add(currentNode);
+		level.add(currentNode);
 		int currentDistance = 0;
 		StringBuilder s = new StringBuilder();
-		while (q.peek()!=null){//While there are nodes left to print
-			currentNode = q.remove();
-			if (currentNode.getDistance()>currentDistance){//If we hit a new level
+		while (q.peek()!=null){
+			//While there are nodes left to print
+			currentNode = q.peek();
+			if (currentNode.getDepth()>currentDistance){
+				//If we hit a new level
+				s = getLevel(currentDistance, level);
+				//Level is empty now, so we need to refill it from q
+				level = new LinkedList<TreeNode<E>>(q);
+				//Then print the string we built
 				System.out.println(s);
 				s = new StringBuilder();
 				currentDistance++;
 			}
-			s.append(currentNode.getData()+" ");
-			TreeNode<E> leftChild = currentNode.getLeft();
-			TreeNode<E> rightChild = currentNode.getRight();
-			if (leftChild!=null){
-				//System.out.println("Adding left");
-				q.add(leftChild);
-			}
-			if (rightChild!=null){
-				//System.out.println("Adding right");
-				q.add(rightChild);
-			}
-			//System.out.println(q.remove());
-			//System.out.println(currentNode.getData()+"data");
+			q.remove();
+			//Add the children to the q
+			addChildren(q, currentNode);
 		}
 		System.out.println(s);
+	}
+	private void addChildren(LinkedList<TreeNode<E>> q, TreeNode<E> currentNode) {
+		TreeNode<E> leftChild = currentNode.getLeft();
+		TreeNode<E> rightChild = currentNode.getRight();
+		if (leftChild!=null){
+			System.out.println("Adding left"+leftChild.getData());
+			q.add(leftChild);
+		}
+		if (rightChild!=null){
+			System.out.println("Adding right"+rightChild.getData());
+			q.add(rightChild);
+		}
+	}
+	public StringBuilder getLevel(int currentDistance, LinkedList<TreeNode<E>> level){
+		System.out.println("depth is "+currentDistance);
+		StringBuilder s = new StringBuilder();
+		for (int i = 0; i<(2^currentDistance);i++){
+			//Loop through the current level
+			TreeNode<E> n = level.peek();
+			if (n==null){
+				return s;
+			}
+			System.out.println("loop index is "+i);
+			System.out.println("node index is "+n.getIndex());
+			if (n.getIndex()==i){
+				//If it is a node
+				s.append(level.remove().getData()+" ");
+			}
+			else {
+				//Empty node
+				s.append("- ");
+			}
+		}
+		return s;
 	}
 	public TreeNode<E> find(E searchData){
 		TreeNode<E> n = this.root;
