@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 public class Tree<E extends Comparable<E>> {
 	private TreeNode<E> root;
+	private int height;
 	public Tree(){
 		this.root = null;
 	}
@@ -12,6 +13,12 @@ public class Tree<E extends Comparable<E>> {
 	}
 	public TreeNode<E> getRoot(){
 		return this.root;
+	}
+	public int getHeight(TreeNode<E> n){
+		if (n==null){
+			return -1;
+		}
+		return Math.max(getHeight(n.getLeft()), getHeight(n.getRight()))+1;
 	}
 	public void insert(E data){
 		TreeNode<E> currentNode = this.root;
@@ -31,31 +38,29 @@ public class Tree<E extends Comparable<E>> {
 	}
 	public void print(){//BFS to print the tree
 		TreeNode<E> currentNode = this.root;
+		this.height = getHeight(this.root);
 		if (currentNode==null){
 			return;
 		}
 		LinkedList<TreeNode<E>> q = new LinkedList<TreeNode<E>>();
-		LinkedList<TreeNode<E>> level = new LinkedList<TreeNode<E>>();
 		q.add(currentNode);
-		level.add(currentNode);
-		int currentDistance = 0;
+		LinkedList<TreeNode<E>> level = new LinkedList<TreeNode<E>>(q);
+		int currentDepth = 0;
 		while (q.peek()!=null){
 			//While there are nodes left to print
 			currentNode = q.peek();
-			if (currentNode.getDepth()>currentDistance){
+			if (currentNode.getDepth()>currentDepth){
 				//If we hit a new level
-				System.out.println(getLevel(currentDistance, level));
+				System.out.println(getLevel(currentDepth, level));
 				//Level is empty now, so we need to refill it from q
 				level = new LinkedList<TreeNode<E>>(q);
-				currentDistance++;
+				currentDepth++;
 			}
 			q.remove();
 			//Add the children to the q
 			addChildren(q, currentNode);
 		}
-		//System.out.println("level"+level.peek().getData());
-		//level = new LinkedList<TreeNode<E>>(q);
-		System.out.println(getLevel(currentDistance,level));
+		System.out.println(getLevel(currentDepth,level));
 	}
 	private void addChildren(LinkedList<TreeNode<E>> q, TreeNode<E> currentNode) {
 		TreeNode<E> leftChild = currentNode.getLeft();
@@ -67,17 +72,18 @@ public class Tree<E extends Comparable<E>> {
 			q.add(rightChild);
 		}
 	}
-	public StringBuilder getLevel(int currentDistance, LinkedList<TreeNode<E>> level){
-		//System.out.println("depth is "+currentDistance);
+	public StringBuilder getLevel(int currentDepth, LinkedList<TreeNode<E>> level){
+		//Return a string representing the current level of the tree
 		StringBuilder s = new StringBuilder();
-		for (int i = 0; i<Math.pow(2,currentDistance);i++){
+		int currentWidth = (int) Math.pow(2,currentDepth);
+		int maxWidth = (int) Math.pow(2,this.height);
+		s.append(getSideBufferSpaces(currentWidth, maxWidth));
+		for (int i = 0; i<currentWidth;i++){
 			//Loop through the current level
 			TreeNode<E> n = level.peek();
 			if (n==null){
 				return s;
 			}
-			//System.out.println("loop index is "+i);
-			//System.out.println("node index is "+n.getIndex());
 			if (n.getIndex()==i){
 				//If it is a node
 				s.append(level.remove().getData()+" ");
@@ -87,8 +93,19 @@ public class Tree<E extends Comparable<E>> {
 				s.append("- ");
 			}
 		}
-		//System.out.println("exiting getlevel");
 		return s;
+	}
+	private String getSideBufferSpaces(int currentWidth, int maxWidth) {
+		if (currentWidth == maxWidth){
+			return "";
+		}
+		int widthDifference = maxWidth - currentWidth;
+		int sideWidth = (widthDifference)/2;
+		StringBuilder s = new StringBuilder();
+		for (int i =0;i<sideWidth;i++){
+			s.append("  ");
+		}
+		return s.toString();
 	}
 	public TreeNode<E> find(E searchData){
 		TreeNode<E> n = this.root;

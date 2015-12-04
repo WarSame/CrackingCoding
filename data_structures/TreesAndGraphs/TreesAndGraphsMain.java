@@ -9,8 +9,13 @@ public class TreesAndGraphsMain {
 		t.insert(6);
 		t.insert(8);
 		t.insert(1);
+		t.insert(17);
+		t.insert(19);
+		t.insert(19);
+		t.insert(17);
+		t.insert(17);
 		t.print();
-		//System.out.println(t.getRoot().getRight().getData());
+		//System.out.println(t.getHeight(t.getRoot()));
 	}
 
 }
