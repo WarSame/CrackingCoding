@@ -1,10 +1,11 @@
 package data_structures.TreesAndGraphs;
 
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Queue;
 
 public class Tree<E extends Comparable<E>> {
 	private TreeNode<E> root;
-	private int height;
 	public Tree(){
 		this.root = null;
 	}
@@ -14,11 +15,14 @@ public class Tree<E extends Comparable<E>> {
 	public TreeNode<E> getRoot(){
 		return this.root;
 	}
-	public int getHeight(TreeNode<E> n){
+	public int getHeight(){
+		return getHeightRecurse(this.root);
+	}
+	public int getHeightRecurse(TreeNode<E> n){
 		if (n==null){
 			return -1;
 		}
-		return Math.max(getHeight(n.getLeft()), getHeight(n.getRight()))+1;
+		return Math.max(getHeightRecurse(n.getLeft()), getHeightRecurse(n.getRight()))+1;
 	}
 	public void insert(E data){
 		TreeNode<E> currentNode = this.root;
@@ -36,71 +40,52 @@ public class Tree<E extends Comparable<E>> {
 		}
 		currentNode.setChild(data);
 	}
-	public void print(){//BFS to print the tree
-		TreeNode<E> currentNode = this.root;
-		this.height = getHeight(this.root);
-		if (currentNode==null){
-			return;
-		}
-		LinkedList<TreeNode<E>> q = new LinkedList<TreeNode<E>>();
-		q.add(currentNode);
-		LinkedList<TreeNode<E>> level = new LinkedList<TreeNode<E>>(q);
-		int currentDepth = 0;
-		while (q.peek()!=null){
-			//While there are nodes left to print
-			currentNode = q.peek();
-			if (currentNode.getDepth()>currentDepth){
-				//If we hit a new level
-				System.out.println(getLevel(currentDepth, level));
-				//Level is empty now, so we need to refill it from q
-				level = new LinkedList<TreeNode<E>>(q);
-				currentDepth++;
-			}
-			q.remove();
-			//Add the children to the q
-			addChildren(q, currentNode);
-		}
-		System.out.println(getLevel(currentDepth,level));
+	public void print(){
+		printTree(this.root);
 	}
-	private void addChildren(LinkedList<TreeNode<E>> q, TreeNode<E> currentNode) {
-		TreeNode<E> leftChild = currentNode.getLeft();
-		TreeNode<E> rightChild = currentNode.getRight();
-		if (leftChild!=null){
-			q.add(leftChild);
-		}
-		if (rightChild!=null){
-			q.add(rightChild);
-		}
-	}
-	public StringBuilder getLevel(int currentDepth, LinkedList<TreeNode<E>> level){
-		//Return a string representing the current level of the tree
-		StringBuilder s = new StringBuilder();
-		int currentWidth = (int) Math.pow(2,currentDepth);
-		int maxWidth = (int) Math.pow(2,this.height);
-		s.append(getSideBufferSpaces(currentWidth, maxWidth));
-		for (int i = 0; i<currentWidth;i++){
-			//Loop through the current level
-			TreeNode<E> n = level.peek();
-			if (n==null){
-				return s;
+	private void printTree(TreeNode<E> root){//BFS to print the tree
+		Queue<TreeNode<E>> currentLevel = new LinkedList<TreeNode<E>>();
+		Queue<TreeNode<E>> nextLevel = new LinkedList<TreeNode<E>>();
+		currentLevel.add(root);
+		int level = 0;
+		int maxHeight = this.getHeight();
+		while (!currentLevel.isEmpty() && level<maxHeight){
+			System.out.print(getSideBufferSpaces((int)Math.pow(2,level), (int)Math.pow(2,maxHeight-1)));
+			Iterator<TreeNode<E>> iter = currentLevel.iterator();
+			while (iter.hasNext()){
+				TreeNode<E> currentNode = iter.next();
+				if (currentNode.getData()==null){
+					System.out.print("- ");
+					nextLevel.add(new TreeNode<E>());//Add 2 dummy children
+					nextLevel.add(new TreeNode<E>());
+					continue;
+				}
+				if (currentNode.getLeft()!=null){//Add left or
+					nextLevel.add(currentNode.getLeft());
+				}
+				else {//Add empty node
+					nextLevel.add(new TreeNode<E>());
+				}
+				if (currentNode.getRight()!=null){
+					nextLevel.add(currentNode.getRight());
+				}
+				else {
+					nextLevel.add(new TreeNode<E>());
+				}
+				System.out.print(currentNode.getData()+" ");
 			}
-			if (n.getIndex()==i){
-				//If it is a node
-				s.append(level.remove().getData()+" ");
-			}
-			else {
-				//Empty node
-				s.append("- ");
-			}
+			System.out.println();
+			currentLevel = nextLevel;
+			nextLevel = new LinkedList<TreeNode<E>>();
+			level++;
 		}
-		return s;
 	}
 	private String getSideBufferSpaces(int currentWidth, int maxWidth) {
 		if (currentWidth == maxWidth){
 			return "";
 		}
 		int widthDifference = maxWidth - currentWidth;
-		int sideWidth = (widthDifference)/2;
+		int sideWidth = (1+widthDifference)/2;//To centralize it
 		StringBuilder s = new StringBuilder();
 		for (int i =0;i<sideWidth;i++){
 			s.append("  ");

@@ -4,19 +4,17 @@ public class TreeNode<E extends Comparable<E>> {
 	private TreeNode<E> left;
 	private TreeNode<E> right;
 	private E data;
-	private int depth;//Distance from top of tree to this node
 	private int index;//Distance from left of tree to this node in number of elements
 	public TreeNode(E data){//Creates root
-		this(data,0,0);
+		this(data,0);
 	}
 	public TreeNode(){//Creates empty node
-		this(null,0,0);
+		this(null,0);
 	}
-	public TreeNode(E data, int depth, int totalIndex){//Creates normal node
+	public TreeNode(E data, int totalIndex){//Creates normal node
 		this.left = null;
 		this.right = null;
 		this.data = data;
-		this.depth = depth;
 		this.index = totalIndex;
 	}
 	public TreeNode<E> getLeft(){
@@ -51,22 +49,16 @@ public class TreeNode<E extends Comparable<E>> {
 		this.setLeftFromNode(data);
 	}
 	public void setLeft(E data){
-		this.left = new TreeNode<E>(data, this.depth+1, this.index*2);
+		this.left = new TreeNode<E>(data, this.index*2);
 	}
 	public void setLeftFromNode(TreeNode<E> data){
 		this.left = data;
 	}
 	public void setRight(E data){
-		this.right = new TreeNode<E>(data, this.depth+1, this.index*2 + 1);
+		this.right = new TreeNode<E>(data, this.index*2 + 1);
 	}
 	public void setRightFromNode(TreeNode<E> data){
 		this.right = data;
-	}
-	public int getDepth(){
-		return this.depth;
-	}
-	public void setDepth(int depth){
-		this.depth = depth;
 	}
 	public int getIndex(){
 		return this.index;
@@ -105,33 +97,20 @@ public class TreeNode<E extends Comparable<E>> {
 			else if (parent.getRight()==this){//Right child only
 				if (this.getLeft()==null){
 					parent.setRightFromNode(this.getRight());
-					this.getRight().decreaseChildDepths();
 				}
 				else {
 					parent.setRightFromNode(this.getLeft());
-					this.getLeft().decreaseChildDepths();
 				}
 			}
 			else {//Left child only
 				if (this.getLeft()==null){
 					parent.setLeftFromNode(this.getRight());
-					this.getRight().decreaseChildDepths();
 				}
 				else {
 					parent.setLeftFromNode(this.getLeft());
-					this.getLeft().decreaseChildDepths();
 				}
 			}
 			return true;
-		}
-	}
-	private void decreaseChildDepths() {
-		this.setDepth(this.getDepth()-1);
-		if (this.getLeft()!=null){
-			this.getLeft().decreaseChildDepths();	
-		}
-		if (this.getRight()!=null){
-			this.getRight().decreaseChildDepths();
 		}
 	}
 	public E minValue(){
