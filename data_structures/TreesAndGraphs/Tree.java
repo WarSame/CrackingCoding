@@ -120,22 +120,19 @@ public class Tree<E extends Comparable<E>> {
 		}
 		return n;//Either null or the correct result
 	}
-	public void delete(E delData){
-		TreeNode<E> n = this.root;
-		E nodeData = n.getData();
-		while (n!=null && nodeData!=delData){
-			if (nodeData.compareTo(delData)<0){
-				n = n.getRight();
-			}
-			else {
-				n = n.getLeft();
-			}
-			nodeData = n.getData();
+	public boolean remove(E data){
+		if (this.root==null){
+			return false;
 		}
-		if (n.isLeaf()){
-			n=null;
-			return;
+		if (this.root.getData()==data){
+			TreeNode<E> auxRoot = new TreeNode<E>();
+			auxRoot.setLeftFromNode(this.root);
+			boolean ret = root.remove(data, auxRoot);
+			this.root = auxRoot.getLeft();
+			return ret;
 		}
-		//Trickier if it has children - have to make sure they get moved up appropriately
+		else {
+			return this.root.remove(data, null);
+		}
 	}
 }

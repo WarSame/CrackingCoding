@@ -11,9 +11,9 @@ public class TreesAndGraphsMain {
 		t.insert(1);
 		t.insert(17);
 		t.insert(19);
-		t.insert(19);
+		t.insert(20);
 		t.insert(17);
-		t.insert(17);
+		t.remove(6);
 		t.print();
 		//System.out.println(t.getHeight(t.getRoot()));
 	}
