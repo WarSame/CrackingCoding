@@ -3,19 +3,10 @@ package data_structures.TreesAndGraphs;
 public class TreesAndGraphsMain {
 
 	public static void main(String[] args) {
-		Tree<Integer> t = new Tree<Integer>();
-		t.insert(4);
-		t.insert(3);
-		t.insert(6);
-		t.insert(8);
-		t.insert(1);
-		t.insert(17);
-		t.insert(19);
-		t.insert(20);
-		t.insert(17);
-		t.remove(6);
+		Integer[] i = new Integer[]{1,2,3,5,6,7,8,9,12,16};
+		Tree<Integer> t = Tree.treeFromArray(i);
 		t.print();
-		//System.out.println(t.getHeight(t.getRoot()));
+		System.out.println(t.getSuccessor(t.find(8)).getData());
 	}
 
 }

@@ -3,19 +3,15 @@ package data_structures.TreesAndGraphs;
 public class TreeNode<E extends Comparable<E>> {
 	private TreeNode<E> left;
 	private TreeNode<E> right;
+	private TreeNode<E> parent;
 	private E data;
-	private int index;//Distance from left of tree to this node in number of elements
-	public TreeNode(E data){//Creates root
-		this(data,0);
-	}
-	public TreeNode(){//Creates empty node
-		this(null,0);
-	}
-	public TreeNode(E data, int totalIndex){//Creates normal node
+	public TreeNode(E data){
 		this.left = null;
 		this.right = null;
 		this.data = data;
-		this.index = totalIndex;
+	}
+	public TreeNode(){//Creates empty node
+		this(null);
 	}
 	public TreeNode<E> getLeft(){
 		return this.left;
@@ -29,6 +25,9 @@ public class TreeNode<E extends Comparable<E>> {
 		}
 		//If currentNode >= data then data goes to the left
 		return this.getLeft();
+	}
+	public TreeNode<E> getParent(){
+		return this.parent;
 	}
 	public void replace(TreeNode<E> child){//Replaces this with the input node
 		this.setRightFromNode(child.getRight());
@@ -48,20 +47,32 @@ public class TreeNode<E extends Comparable<E>> {
 		}
 		this.setLeftFromNode(data);
 	}
+	public void setParent(TreeNode<E> parent){
+		this.parent = parent;
+	}
 	public void setLeft(E data){
-		this.left = new TreeNode<E>(data, this.index*2);
+		this.left = new TreeNode<E>(data);
+		if (data!=null){
+			this.left.setParent(this);
+		}
 	}
 	public void setLeftFromNode(TreeNode<E> data){
 		this.left = data;
+		if (data!=null){
+			this.left.setParent(this);
+		}
 	}
 	public void setRight(E data){
-		this.right = new TreeNode<E>(data, this.index*2 + 1);
+		this.right = new TreeNode<E>(data);
+		if (data!=null){
+			this.right.setParent(this);
+		}
 	}
 	public void setRightFromNode(TreeNode<E> data){
 		this.right = data;
-	}
-	public int getIndex(){
-		return this.index;
+		if (data!=null){
+			this.right.setParent(this);
+		}
 	}
 	public boolean isLeaf(){
 		if (this.right==null&&this.left==null){

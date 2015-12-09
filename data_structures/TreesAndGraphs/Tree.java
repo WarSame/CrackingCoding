@@ -2,6 +2,7 @@ package data_structures.TreesAndGraphs;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.Queue;
 
 public class Tree<E extends Comparable<E>> {
@@ -11,6 +12,9 @@ public class Tree<E extends Comparable<E>> {
 	}
 	public Tree(E data){
 		this.root = new TreeNode<E>(data);
+	}
+	public Tree(TreeNode<E> n){
+		this.root = n;
 	}
 	public TreeNode<E> getRoot(){
 		return this.root;
@@ -41,6 +45,9 @@ public class Tree<E extends Comparable<E>> {
 		currentNode.setChild(data);
 	}
 	public void print(){
+		if (this.root==null){
+			throw new NoSuchElementException();
+		}
 		printTree(this.root);
 	}
 	private void printTree(TreeNode<E> root){//BFS to print the tree
@@ -49,8 +56,8 @@ public class Tree<E extends Comparable<E>> {
 		currentLevel.add(root);
 		int level = 0;
 		int maxHeight = this.getHeight();
-		while (!currentLevel.isEmpty() && level<maxHeight){
-			System.out.print(getSideBufferSpaces((int)Math.pow(2,level), (int)Math.pow(2,maxHeight-1)));
+		while (!currentLevel.isEmpty() && level<maxHeight+1){
+			System.out.print(getSideBufferSpaces((int)Math.pow(2,level), (int)Math.pow(2,maxHeight)));
 			Iterator<TreeNode<E>> iter = currentLevel.iterator();
 			while (iter.hasNext()){
 				TreeNode<E> currentNode = iter.next();
@@ -96,12 +103,13 @@ public class Tree<E extends Comparable<E>> {
 		TreeNode<E> n = this.root;
 		E nodeData = n.getData();
 		while (n!=null&&nodeData!=searchData){
-			if (nodeData.compareTo(searchData)<0){
+			if (nodeData.compareTo(searchData)<0){//nodeData - searchData <0
 				n = n.getRight();
 			}
 			else {
 				n = n.getLeft();
 			}
+			nodeData = n.getData();
 		}
 		return n;//Either null or the correct result
 	}
@@ -119,5 +127,68 @@ public class Tree<E extends Comparable<E>> {
 		else {
 			return this.root.remove(data, null);
 		}
+	}
+	public int maxDepth(TreeNode<E> n) {
+		if (n == null) {
+			return 0;
+		}
+		return 1 + Math.max(maxDepth(n.getLeft()), maxDepth(n.getRight()));
+	}
+		
+	public int minDepth(TreeNode<E> n) {
+		if (n == null) {
+			return 0;
+		}
+		return 1 + Math.min(minDepth(n.getLeft()), minDepth(n.getRight()));
+	}
+	
+	public boolean isBalanced(){
+		return isBalanced(this.root);
+	}
+	public boolean isBalanced(TreeNode<E> root){
+		//Gives 2 and 5 instead of 3 and 5
+		int max = maxDepth(root);
+		int min = minDepth(root);
+		return ((max-min) <= 1);
+	}
+	public static <E extends Comparable<E>> Tree<E> treeFromArray(E[] A){
+		return new Tree<E>(fromArrayRecurse(A,0,A.length-1));
+	}
+	private static <E extends Comparable<E>> TreeNode<E> fromArrayRecurse(E[] A, int min, int max){
+		if (max<min){
+			return null;
+		}
+		int mid = (max + min)/2; 
+		TreeNode<E> n = new TreeNode<E>(A[mid]);
+		n.setLeftFromNode(fromArrayRecurse(A, min, mid-1));
+		n.setRightFromNode(fromArrayRecurse(A, mid+1, max));
+		return n;
+	}
+	public TreeNode<E> getSuccessor(TreeNode<E> source){
+		//If node has a right child, then successor is min of that child
+		//If not, track up. If source was a left child, parent is successor.
+		//If source was a right child, find the successor of parent
+		if (source == null){
+			return null;
+		}
+		if (source.getParent()==null||source.getRight()!=null){
+			return findMin(source.getRight());
+		}
+		TreeNode<E> parent = source.getParent();
+		while (parent!=null){
+			if (parent.getLeft()==source){
+				return parent;
+			}
+			source = parent;
+			parent = source.getParent();
+		}
+		return parent;
+	}
+	public TreeNode<E> findMin(TreeNode<E> n){//Find minimum child of a node
+		TreeNode<E> leftChild = n.getLeft();
+		if (leftChild==null){
+			return null;
+		}
+		return findMin(leftChild);
 	}
 }
