@@ -1,6 +1,7 @@
 package algorithms.Recursion;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,11 +11,7 @@ import pair.Pair;
 public class RecursionMain {
 	static List<Pair<Integer,Integer>> blockedCoords;
 	public static void main(String[] args){
-		HashSet<Integer> hs = new HashSet<Integer>();
-		hs.add(4);
-		hs.add(5);
-		hs.add(7);
-		System.out.println(getSubsets(hs));
+		System.out.println(waysMakeChange(50));
 	}
 	public static int fibonacciNum(int n){
 		if (n==0||n==1){
@@ -60,15 +57,38 @@ public class RecursionMain {
 			HashSet<Integer> inSetSub = (HashSet<Integer>) inSet.clone();
 			inSetSub.remove(i);
 			if (inSetSub.isEmpty()){//Base case
-				continue;
+				break;
 			}
 			ll.add(inSetSub);
 			LinkedList<HashSet<Integer>> subSetLl = getSubsets(inSetSub);
-
-			for (HashSet<Integer> set : subSetLl){
-				ll.add(set);
-			}
+			ll.addAll(subSetLl);
 		}
 		return ll;
+	}
+	public static int waysMakeChange(int centsToChange){
+		return waysMakeChangeRecurse(centsToChange, 0);
+	}
+	private static int waysMakeChangeRecurse(int centsToChange, int currSum){
+		//Given an argument of number of cents to make change, return the count of possible ways to do so
+		if (currSum>centsToChange){
+			return 0;
+		}
+		if (currSum==centsToChange){
+			return 1;
+		}
+		int numFromPenny = waysMakeChangeRecurse(centsToChange, currSum+1);
+		int numFromNickel = waysMakeChangeRecurse(centsToChange, currSum+5);
+		int numFromDime = waysMakeChangeRecurse(centsToChange, currSum+10);
+		int numFromQuarter = waysMakeChangeRecurse(centsToChange, currSum+25);
+		return numFromPenny+numFromNickel+numFromDime+numFromQuarter;
+	}
+	private static int makeChangeDifferentWays(int centsToChange){
+		int currSum = 0;
+		int numWays = 0;
+		MultiKeyMap<CentCollection,Boolean> centCollection = new MultiKeyMap<CentCollection,Boolean>();
+		while (currSum<centsToChange){
+			
+		}
+		return numWays;
 	}
 }
